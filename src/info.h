@@ -1075,6 +1075,8 @@ typedef enum sprite
 	NUMSPRITES
 } spritenum_t;
 
+extern spritenum_t moviespritenum;
+
 // Make sure to be conscious of FF_FRAMEMASK and the fact sprite2 is stored as a UINT8 whenever you change this table.
 // Currently, FF_FRAMEMASK is 0xff, or 255 - but the second half is used by FF_SPR2SUPER, so the limitation is 0x7f.
 // Since this is zero-based, there can be at most 128 different SPR2_'s without changing that.

@@ -112,3 +112,4 @@ int LUA_PolyObjLib(lua_State *L);
 int LUA_BlockmapLib(lua_State *L);
 int LUA_HudLib(lua_State *L);
 int LUA_InputLib(lua_State *L);
+int LUA_MovieLib(lua_State *L);

@@ -15,6 +15,7 @@
 
 #include "hw_defs.h"
 #include "hw_main.h"
+#include "../movie_decode.h"
 #include "../m_misc.h"
 #include "../p_setup.h"
 
@@ -133,6 +134,9 @@ void HWR_FreeColormapCache(void);
 void HWR_UnlockCachedPatch(GLPatch_t *gpatch);
 
 void HWR_SetPalette(RGBA_t *palette);
+
+GLMipmap_t *HWR_GetMovieTexture(movie_t *movie);
+GLMapTexture_t *HWR_GetMovieMapTexture(movie_t *movie);
 
 
 // --------

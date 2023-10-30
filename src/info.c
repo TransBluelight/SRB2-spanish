@@ -524,6 +524,8 @@ char sprnames[NUMSPRITES + 1][5] =
 	"GWLR",
 };
 
+spritenum_t moviespritenum = -1;
+
 char spr2names[NUMPLAYERSPRITES][5] =
 {
 	"STND",

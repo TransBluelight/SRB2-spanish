@@ -18,6 +18,7 @@
 #include "hw_batching.h"
 
 #include "../doomstat.h"    //gamemode
+#include "../d_main.h"
 #include "../i_video.h"     //rendermode
 #include "../r_data.h"
 #include "../r_textures.h"
@@ -28,6 +29,7 @@
 #include "../r_patch.h"
 #include "../r_picformats.h"
 #include "../p_setup.h"
+#include "../movie_decode.h"
 
 INT32 patchformat = GL_TEXFMT_AP_88; // use alpha for holes
 INT32 textureformat = GL_TEXFMT_P_8; // use chromakey for hole
@@ -583,6 +585,7 @@ void HWR_MakePatch (const patch_t *patch, GLPatch_t *grPatch, GLMipmap_t *grMipm
 static size_t gl_numtextures = 0; // Texture count
 static GLMapTexture_t *gl_textures; // For all textures
 static GLMapTexture_t *gl_flats; // For all (texture) flats, as normal flats don't need to be cached
+static GLMapTexture_t gl_movietexture;
 boolean gl_maptexturesloaded = false;
 
 void HWR_FreeTextureData(patch_t *patch)
@@ -783,17 +786,23 @@ GLMapTexture_t *HWR_GetTexture(INT32 tex)
 		I_Error("HWR_GetTexture: tex >= numtextures\n");
 #endif
 
-	// Every texture in memory, stored in the
-	// hardware renderer's bit depth format. Wow!
-	grtex = &gl_textures[tex];
+	grtex = (tex == movietexturenum) ? HWR_GetMovieMapTexture(activemovie) : NULL;
 
-	// Generate texture if missing from the cache
-	if (!grtex->mipmap.data && !grtex->mipmap.downloaded)
-		HWR_GenerateTexture(tex, grtex);
+	if (!grtex)
+	{
+		// Every texture in memory, stored in the
+		// hardware renderer's bit depth format. Wow!
+		grtex = &gl_textures[tex];
+
+		// Generate texture if missing from the cache
+		if (!grtex->mipmap.data && !grtex->mipmap.downloaded)
+			HWR_GenerateTexture(tex, grtex);
+	}
 
 	// If hardware does not have the texture, then call pfnSetTexture to upload it
 	if (!grtex->mipmap.downloaded)
 		HWD.pfnSetTexture(&grtex->mipmap);
+
 	HWR_SetCurrentTexture(&grtex->mipmap);
 
 	// The system-memory data can be purged now.
@@ -1312,6 +1321,45 @@ void HWR_GetFadeMask(lumpnum_t fademasklumpnum)
 
 	// The system-memory data can be purged now.
 	Z_ChangeTag(grmip->data, PU_HWRCACHE_UNLOCKED);
+}
+
+GLMipmap_t *HWR_GetMovieTexture(movie_t *movie)
+{
+	GLMapTexture_t *maptexture = HWR_GetMovieMapTexture(movie);
+	return maptexture ? &maptexture->mipmap : NULL;
+}
+
+GLMapTexture_t *HWR_GetMovieMapTexture(movie_t *movie)
+{
+	GLMipmap_t *texture = &gl_movietexture.mipmap;
+
+	if (!movie)
+		return NULL;
+
+	UINT8 *image = MovieDecode_GetImage(movie);
+	if (!image)
+		return (texture->data || texture->downloaded) ? &gl_movietexture : NULL;
+
+	FreeMapTexture(&gl_movietexture);
+
+	INT32 width, height;
+	MovieDecode_GetDimensions(movie, &width, &height);
+
+	memset(&gl_movietexture, 0, sizeof(gl_movietexture));
+	gl_movietexture.scaleX = 1.0f / width;
+	gl_movietexture.scaleY = 1.0f / height;
+
+	texture->flags = TF_WRAPXY;
+	texture->width = (UINT16)width;
+	texture->height = (UINT16)height;
+	texture->format = GL_TEXFMT_RGBA;
+
+	INT32 texturesize = texture->width * texture->height * 4;
+	Z_Malloc(texturesize, PU_HWRCACHE, &texture->data);
+
+	memcpy(texture->data, image, texturesize);
+
+	return &gl_movietexture;
 }
 
 #endif //HWRENDER

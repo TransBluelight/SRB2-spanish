@@ -59,6 +59,7 @@ static lua_CFunction liblist[] = {
 	LUA_BlockmapLib, // blockmap stuff
 	LUA_HudLib, // HUD stuff
 	LUA_InputLib, // inputs
+	LUA_MovieLib, // movie
 	NULL
 };
 

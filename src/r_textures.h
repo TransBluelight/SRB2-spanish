@@ -75,6 +75,8 @@ extern fixed_t *textureheight; // needed for texture pegging
 extern UINT32 **texturecolumnofs; // column offset lookup table for each texture
 extern UINT8 **texturecache; // graphics data for each generated full-size texture
 
+extern INT32 movietexturenum;
+
 // Load TEXTURES definitions, create lookup tables
 void R_LoadTextures(void);
 void R_LoadTexturesPwad(UINT16 wadnum);

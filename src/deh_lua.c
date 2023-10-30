@@ -76,6 +76,8 @@ static inline int lib_freeslot(lua_State *L)
 				strncpy(sprnames[j],word,4);
 				//sprnames[j][4] = 0;
 				used_spr[(j-SPR_FIRSTFREESLOT)/8] |= 1<<(j%8); // Okay, this sprite slot has been named now.
+				if (!strcmp(word, "MOVI"))
+					moviespritenum = j;
 				// Lua needs to update the value in _G if it exists
 				LUA_UpdateSprName(word, j);
 				lua_pushinteger(L, j);
