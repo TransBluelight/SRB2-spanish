@@ -100,3 +100,8 @@ lib:=../libs/curl
 CURL_opts:=-I$(lib)/include
 CURL_libs:=-L$(lib)/lib$(32) -lcurl
 $(eval $(call _set,CURL))
+
+lib:=../libs/ffmpeg
+FFMPEG_opts:=-I$(lib)/include
+FFMPEG_libs:=-L$(lib)/lib -lavcodec-59 -lavformat-59 -lavutil-57 -lswresample-4 -lswscale-6
+$(eval $(call _set,FFMPEG))
