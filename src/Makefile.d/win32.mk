@@ -102,6 +102,24 @@ CURL_libs:=-L$(lib)/lib$(32) -lcurl
 $(eval $(call _set,CURL))
 
 lib:=../libs/ffmpeg
-FFMPEG_opts:=-I$(lib)/include
-FFMPEG_libs:=-L$(lib)/lib -lavcodec-59 -lavformat-59 -lavutil-57 -lswresample-4 -lswscale-6
-$(eval $(call _set,FFMPEG))
+#$(eval $(call _set,FFMPEG))
+
+AVCODEC_opts:=-I$(lib)/include
+AVCODEC_libs:=-L$(lib)/lib$(32) -lavcodec-59
+$(eval $(call _set,AVCODEC))
+
+AVFORMAT_opts:=-I$(lib)/include
+AVFORMAT_libs:=-L$(lib)/lib$(32) -lavformat-59
+$(eval $(call _set,AVFORMAT))
+
+AVUTIL_opts:=-I$(lib)/include
+AVUTIL_libs:=-L$(lib)/lib$(32) -lavutil-57
+$(eval $(call _set,AVUTIL))
+
+SWRESAMPLE_opts:=-I$(lib)/include
+SWRESAMPLE_libs:=-L$(lib)/lib$(32) -lswresample-4
+$(eval $(call _set,SWRESAMPLE))
+
+SWSCALE_opts:=-I$(lib)/include
+SWSCALE_libs:=-L$(lib)/lib$(32) -lswscale-6
+$(eval $(call _set,SWSCALE))
