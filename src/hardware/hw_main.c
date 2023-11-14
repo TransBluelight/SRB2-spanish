@@ -3258,7 +3258,7 @@ static void HWR_RenderBSPNode(INT32 bspnum)
 	}
 	while(!((size_t)bspnum&(~NF_SUBSECTOR))) // Keep going until found a subsector
 	{
-		node_t *bsp = &nodes[bspnum];
+		bspnode_t *bsp = &nodes[bspnum];
 
 		// Decide which side the view point is on
 		INT32 side = R_PointOnSide(dup_viewx, dup_viewy, bsp);
@@ -3277,7 +3277,7 @@ static void HWR_RenderBSPNode(INT32 bspnum)
 
 	HWR_Subsector(bspnum-1);
 */
-	node_t *bsp = &nodes[bspnum];
+	bspnode_t *bsp = &nodes[bspnum];
 
 	// Decide which side the view point is on
 	INT32 side;
