@@ -27,6 +27,8 @@
 #include "p_setup.h" // levelflats
 #include "byteptr.h"
 #include "dehacked.h"
+#include "movie_decode.h"
+#include "d_main.h"
 
 #ifdef HWRENDER
 #include "hardware/hw_glob.h" // HWR_LoadMapTextures
@@ -513,6 +515,40 @@ void R_CheckTextureCache(INT32 tex)
 {
 	if (!texturecache[tex])
 		R_GenerateTexture(tex);
+	if (tex == movietexturenum)
+		R_CheckMovieTextureCache(activemovie, tex);
+}
+
+void R_CheckMovieTextureCache(movie_t *movie, INT32 texnum)
+{
+	if (!movie)
+		return;
+
+	UINT8 *image = MovieDecode_GetImage(movie);
+	if (!image)
+		return;
+
+	if (texturecache[texnum])
+		Z_Free(texturecache[texnum]);
+
+	INT32 width, height;
+	MovieDecode_GetDimensions(movie, &width, &height);
+
+	texture_t *texture = textures[texnum];
+	texture->width = width;
+	texture->height = height;
+	texture->type = TEXTURETYPE_SINGLEPATCH;
+	texture->patchcount = 1;
+	texture->holes = true;
+	texture->flip = 0;
+
+	texturewidth[texnum] = width;
+	textureheight[texnum] = height << FRACBITS;
+
+	INT32 blocksize = width * (4 + Movie_GetBytesPerPatchColumn(movie));
+	UINT8 *block = Z_Malloc(blocksize, PU_CACHE, &texturecache[texnum]);
+	texturecolumnofs[texnum] = (UINT32*)block;
+	memcpy(block, image, blocksize);
 }
 
 //
@@ -1676,7 +1712,7 @@ const char *R_CheckTextureNameForNum(INT32 num)
 {
 	if (num > 0 && num < numtextures)
 		return textures[num]->name;
-	
+
 	return "-";
 }
 

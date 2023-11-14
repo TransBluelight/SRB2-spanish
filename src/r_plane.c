@@ -653,6 +653,9 @@ static void R_DrawSkyPlane(visplane_t *pl)
 	dc_texturemid = skytexturemid;
 	dc_texheight = textureheight[skytexture]
 		>>FRACBITS;
+
+	R_CheckTextureCache(skytexture);
+
 	for (x = pl->minx; x <= pl->maxx; x++)
 	{
 		dc_yl = pl->top[x];
