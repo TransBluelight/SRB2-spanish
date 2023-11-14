@@ -91,7 +91,7 @@ void *Picture_Convert(
 	else if (Picture_IsFlatFormat(outformat))
 		return Picture_FlatConvert(informat, picture, outformat, insize, outsize, inwidth, inheight, inleftoffset, intopoffset, flags);
 	else
-		I_Error("Picture_Convert: unsupported input format!");
+		I_Error("Picture_Convert: unsupported output format!");
 
 	return NULL;
 }
