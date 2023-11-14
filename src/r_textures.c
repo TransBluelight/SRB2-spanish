@@ -554,6 +554,8 @@ void R_CheckMovieTextureCache(movie_t *movie, INT32 texnum)
 //
 // R_GetColumn
 //
+// Note that this returns the column's first pixel, not the first post
+//
 UINT8 *R_GetColumn(fixed_t tex, INT32 col)
 {
 	UINT8 *data;
