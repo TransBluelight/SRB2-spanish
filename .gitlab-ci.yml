@@ -628,7 +628,7 @@ Alpine 3 GCC:
     - - |
           # apk_development
           echo -e "\e[0Ksection_start:`date +%s`:apk_development[collapsed=true]\r\e[0KInstalling development packages"
-      - apk add musl-dev sdl2_mixer-dev libpng-dev curl-dev libgme-dev libopenmpt-dev miniupnpc-dev
+      - apk add musl-dev sdl2_mixer-dev libpng-dev curl-dev libgme-dev libopenmpt-dev miniupnpc-dev ffmpeg-libavformat ffmpeg-libswscale ffmpeg-dev
       - |
           # apk_development
           echo -e "\e[0Ksection_end:`date +%s`:apk_development\r\e[0K"
